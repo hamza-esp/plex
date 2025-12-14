@@ -3,9 +3,12 @@
 name: product-catalog-ci
 
 on: 
-    pull_request:
-        branches:
-        - main
+  pull_request:
+    branches:
+    - main
+  push:
+    branches:
+    - main
 
 jobs:
     build:
@@ -32,6 +35,7 @@ jobs:
             go test ./...
     
     code-quality:
+      #without runner you cannot run the job, always need a vm to run the job
         runs-on: ubuntu-latest
 
         steps:
@@ -86,6 +90,7 @@ jobs:
         - name: checkout code
           uses: actions/checkout@v4
           with:
+            # Clones the repo with permission to push changes back.
             token: ${{ secrets.GITHUB_TOKEN }}
 
         - name: Update tag in kubernetes deployment manifest
@@ -94,8 +99,8 @@ jobs:
         
         - name: Commit and push changes
           run: |
-            git config --global user.email "abhishek@gmail.com"
-            git config --global user.name "Abhishek Veeramalla"
+            git config --global user.email "hamzabar99@gmail.com"
+            git config --global user.name "hamza-esp"
             git add kubernetes/productcatalog/deploy.yaml
             git commit -m "[CI]: Update product catalog image tag"
             git push origin HEAD:main -f
